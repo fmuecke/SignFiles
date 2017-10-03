@@ -3,9 +3,9 @@ Powershell script to sign code - including timestamps
 
 ## What problems does it solve?
 - simple to use
-- sign multiple files at once
-- sign files in subdirectories as well
-- do not overwrite existing signatures
+- signs multiple files at once
+- signs files in subdirectories as well
+- does not overwrite existing signatures
 - (more) robust timestamping with different timeservers
 
 ## I need a code signing certificate!
