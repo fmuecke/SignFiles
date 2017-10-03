@@ -72,7 +72,7 @@ param(
 
 
 function WriteCertInfo($cert) {
-    Write-Host "Signing certificate used"
+    Write-Host "Signing certificate info"
 	Write-Host "  thumb  :"$cert.Thumbprint
     Write-Host "  expires:"$cert.GetExpirationDateString()
     Write-Host "  path   :"$cert.PSParentPath
@@ -114,8 +114,15 @@ function SignFileWithTimestamp($file, $cert, $timestampServer)
 
 function SignFile($file, $cert)
 {
-    $result = (set-AuthenticodeSignature -Certificate $cert -HashAlgorithm sha256 $file.FullName)
-    Write-Host "  signed:" $file.FullName
+    Try
+    {
+        $result = (set-AuthenticodeSignature -Certificate $cert -HashAlgorithm sha256 $file.FullName)
+        Write-Host "  signed:" $file.FullName
+    }
+    Catch
+    {
+        $Host.UI.WriteErrorLine("ERROR signing "+$file.FullName+": "+$_.Exception.Message)
+    }
 }
 
 function SignFileWithTimestampAndRetry($file, $cert, [string[]]$timestampServers)
