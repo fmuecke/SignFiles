@@ -30,14 +30,23 @@
     .
 .PARAMETER Thumbprint
     The thumbprint of the certificate that should be used for signing. If no thumbprint is specified, the certificate stores will be searched for a valid code signing certificate.
-.PARAMETER Path
-    Specifies the path where to look for the files to be processed.
+.PARAMETER FileOrPath
+    Specifies the file to sign or the path where to look for the files to be processed. If path is used, the -Pattern switch must be used as well.
+.PARAMETER Pattern
+    A pattern to match the files to be signed against. e.g. "*.exe,*.dll"
+.PARAMETER Force
+    Forces overwrite of existing signatures
+.PARAMETER NoTimestamp
+    Skips timestamping (makes signing a lot faster)
 .EXAMPLE
-    C:\PS> 
-    <Description of example>
+    C:\PS> .\SignFiles.ps1 c:\dev\someproject\output -Thumbprint 364117ABB10A873E3A5F486C0FE10A6F003952D0 -Pattern "*.exe,*.dll"
+    Signs all .exe and .dll files within the directory tree of c:\someproject\output. The certificate with the given thumb will be used.
+.EXAMPLE
+    C:\PS> .\SignFiles.ps1 myfile.exe
+    Signs myfile.exe using the first code signing certificate available on the system.
 .NOTES
     Author: Florian Mücke
-    Date:   October, 1st 2017
+    Date:   October, 3rd 2017
 #>
     
 param(
