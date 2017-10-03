@@ -47,6 +47,8 @@ param(
         [string]$Thumbprint = $null,
     [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, HelpMessage="Pattern of files to sign. Separated by commas.")]
         [string]$Pattern = $null,
+	[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, HelpMessage="Overwrite existing signature")]
+		[switch]$Force,
 	[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, HelpMessage="Sign without timestamping")]
 		[switch]$NoTimestamp
 )
@@ -54,6 +56,7 @@ param(
 #Write-Host "FileOrPath=$FileOrPath"
 #Write-Host "Thumbprint=$Thumbprint"
 #Write-Host "Pattern=$Pattern"
+#Write-Host "Force=$Force"
 #Write-Host "NoTimestamp=$NoTimestamp"
     
 # ------------------
@@ -149,7 +152,7 @@ $signCount = 0
 
 $duration = Measure-Command { foreach ($file in $files)
     {
-        if (HasValidSignature $file)
+        if (-not $Force -and (HasValidSignature $file))
         {
             Write-Host "  skipping" $file        
             $skipCount++
