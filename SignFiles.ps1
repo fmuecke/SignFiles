@@ -46,12 +46,15 @@ param(
     [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, HelpMessage="Thumbprint of code signing certificate")]
         [string]$Thumbprint = $null,
     [Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, HelpMessage="Pattern of files to sign. Separated by commas.")]
-        [string]$Pattern = $null
+        [string]$Pattern = $null,
+	[Parameter(Mandatory=$false, ValueFromPipelineByPropertyName=$true, HelpMessage="Sign without timestamping")]
+		[switch]$NoTimestamp
 )
 
 #Write-Host "FileOrPath=$FileOrPath"
 #Write-Host "Thumbprint=$Thumbprint"
 #Write-Host "Pattern=$Pattern"
+#Write-Host "NoTimestamp=$NoTimestamp"
     
 # ------------------
 
@@ -90,7 +93,7 @@ function SignFileWithTimestamp($file, $cert, $timestampServer)
     Write-Host "  signed with timestamp:" $file.FullName
 }
 
-function SignFileNoTimestamp($file, $cert)
+function SignFile($file, $cert)
 {
     $result = (set-AuthenticodeSignature -Certificate $cert -HashAlgorithm sha256 $file.FullName)
     Write-Host "  signed:" $file.FullName
@@ -153,7 +156,14 @@ $duration = Measure-Command { foreach ($file in $files)
         }
         else
         {
-            SignFileWithTimestampAndRetry $file $cert ($timestampServers)
+            if ($NoTimestamp)
+			{
+				SignFile $file $cert
+			}
+			else
+			{
+				SignFileWithTimestampAndRetry $file $cert ($timestampServers)
+			}
             $signCount++
         }
     }
