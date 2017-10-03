@@ -131,11 +131,15 @@ function SelectFiles($folder, $pattern)
 $cert = GetSigningCert $Thumbprint
 WriteCertInfo $cert
 
+# Benchmarking: duration for ~700 files...
+# verisign -> 2:45
+# globalsign -> 4:12
+# certum.pl -> 3:58
+# comodoca -> 34:25 (!)
 $timestampServers = @(
     "http://timestamp.verisign.com/scripts/timestamp.dll", 
-    "http://timestamp.globalsign.com/scripts/timstamp.dll",
     "http://time.certum.pl",
-    "http://timestamp.verisign.com/scripts/timstamp.dll",
+    "http://timestamp.globalsign.com/scripts/timstamp.dll",
     "http://timestamp.comodoca.com/authenticode"
 )
 
