@@ -81,8 +81,15 @@ function GetSigningCert($thumb) {
         }
     }
     
-    $cert = (gci Cert: -Recurse -CodeSigningCert)[0]
-    return $cert
+    Try
+    {
+        $cert = (gci Cert: -Recurse -CodeSigningCert)[0]
+        return $cert
+    }
+    Catch
+    {
+        throw "No valid code signing certificate found in certificate stores"
+    }
 }
 
 function HasValidSignature($file) {
